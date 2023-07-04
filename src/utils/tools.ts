@@ -7,7 +7,7 @@ export const defaultImg = logo;
  */
 // export const serverUrl = 'http://localhost:8000/';
 // export const imageServerUrl = "http://localhost:8000/";
-export const serverUrl = "https://roll0814.cn:8000/";
+export const serverUrl = "https://roll0814.cn/zja/";
 // export const serverUrl = "/api";
 
 

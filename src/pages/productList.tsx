@@ -321,11 +321,36 @@ function ProductList() {
 
             setIsShow(false);
           }}
+          // onFinishFailed={async (v) => {
+          //   const currentTime = moment().format("YYYY-MM-DD HH:mm:ss"); // 获取当前时间并格式化为datetime字符串
+          //   if (currentId) {
+          //     await updateProductByIdAPI(currentId, {
+          //       p_img_url: imageUrl,
+          //       p_time: currentTime,
+          //       ...v,
+          //     }); // 修改
+          //   } else {
+          //     await insertProductAPI({
+          //       p_img_url: imageUrl,
+          //       p_time: currentTime,
+          //       ...v,
+          //     }); // 新增
+          //   }
+
+          //   message.success("保存成功");
+          //   setQuery(1); // 重置查询条件，取数据
+          //   // navigate("/admin/ProductList");
+
+          //   setIsShow(false);
+          // }}
           labelCol={{ span: 5 }}
           form={myForm}
         >
           <Form.Item label="产品示意图">
-            <MyUpload imageUrl={imageUrl} setImageUrl={setImageUrl} />
+            <MyUpload
+              imageUrl={"https://roll0814.cn:8000/" + imageUrl}
+              setImageUrl={setImageUrl}
+            />
           </Form.Item>
 
           <Form.Item

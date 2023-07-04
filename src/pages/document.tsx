@@ -1,35 +1,48 @@
-import { Descriptions, Divider, Image, List } from "antd";
+import { Button, Descriptions, Divider, Image, List } from "antd";
 import React, { useEffect, useState } from "react";
 import { findUsageByIdAPI } from "../services/usage.service";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { serverUrl } from "../utils/tools";
 import { loadProductByIdAPI } from "../services/product.service";
-
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const Document = () => {
   const { u_id } = useParams<{ u_id: string }>();
+  const navigate = useNavigate();
 
   const [usage, setUsage] = useState<any>({});
-  const [productImg,setProductImg] = useState<any>({});
+  const [productImg, setProductImg] = useState<any>({});
 
   useEffect(() => {
-    if(u_id){
-    const fetchData = async () => {
-      try {
-        const res = await findUsageByIdAPI(u_id);
-        setUsage(res);
-        const res2 = await loadProductByIdAPI(res.u_p_id);
-        setProductImg(res2.result.p_img_url);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }
+    if (u_id) {
+      const fetchData = async () => {
+        try {
+          const res = await findUsageByIdAPI(u_id);
+          setUsage(res);
+          const res2 = await loadProductByIdAPI(res.u_p_id);
+          setProductImg(res2.result.p_img_url);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchData();
+    }
   }, [u_id]);
 
   return (
     <>
+      <div style={{ display: "inline-block" }}>
+        <Button
+          type="primary"
+          icon={<ArrowLeftOutlined />}
+          style={{ marginLeft: 10 }}
+          onClick={() => {
+            navigate(-1); // 返回上一页
+          }}
+        >
+          返回
+        </Button>
+      </div>
       <Divider
         style={{
           fontSize: "2em",

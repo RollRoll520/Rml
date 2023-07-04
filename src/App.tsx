@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="ProductList" element={<ProductList />} />
         <Route path="Document/:u_id" element={<Document />} />
-        <Route path="UsageList/:u_p_id" element={<UsageList />} />
+        <Route path="UsageList/:u_p_id/:isTop?" element={<UsageList />} />
         <Route path="InfoInput" element={<InfoInput />} />
         <Route path="Settings" element={<SettingsPage />} />
       </Routes>

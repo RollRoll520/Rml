@@ -1,58 +1,107 @@
 import { Card, Table, Image, Button, Input, Form, message } from "antd";
 import { useEffect, useState } from "react";
 import { findUsagesByPIdAPI } from "../services/usage.service";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { loadProductByIdAPI } from "../services/product.service";
 import { serverUrl } from "../utils/tools";
-import { CheckCircleFilled, ClockCircleFilled, ProfileOutlined, SearchOutlined, StopOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  CheckCircleFilled,
+  ClockCircleFilled,
+  ProfileOutlined,
+  SearchOutlined,
+  StopOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 function UsageList() {
   const navigate = useNavigate();
-  const { u_p_id } = useParams<{ u_p_id: string }>();
+  const { u_p_id, isTop } = useParams<{ u_p_id: string; isTop: string }>();
   const [data, setData] = useState([]);
   const [productImg, setProductImg] = useState<any>({});
   const [productState, setProductState] = useState<any>({});
 
   useEffect(() => {
-    if (u_p_id&&u_p_id!=="0") {
+    if (u_p_id && u_p_id !== "0") {
       // Call the findUsagesByPIdAPI function to get the usage list data
       findUsagesByPIdAPI(u_p_id)
         .then((res) => {
-          setData(res);
+          console.log(res.length);
+          if (res.length !== 0) {
+            if(isTop)
+            message.success("查询成功！");
+            setData(res);
+            loadProductByIdAPI(u_p_id).then((res) => {
+              setProductImg(res.result.p_img_url);
+              setProductState(res.result.p_state);
+            });
+          } else {
+            if (isTop) message.error("查询失败！");
+            setProductImg(null);
+            setProductState("");
+            setData([]);
+          }
         })
         .catch((error) => {
           console.error(error);
         });
-      loadProductByIdAPI(u_p_id).then((res) => {
-        setProductImg(res.result.p_img_url);
-        setProductState(res.result.p_state);
-      });
+    } else {
+      setProductImg(null);
+      setProductState("");
+      setData([]);
     }
   }, [u_p_id]);
 
   return (
     <>
-      <Form
-        layout="inline"
-        onFinish={(v) => {
-          message.success("查询成功");
-          console.log(v);
-          navigate(`/admin/UsageList/${v.name}`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
-        }}
+      <div
+        style={{ padding: "0", marginBottom: "10px", display: "inline-block" }}
       >
-        <Form.Item label="查询产品" name="name">
-          <Input placeholder="请输入产品编号" allowClear />
-        </Form.Item>
-        <Form.Item>
-          <Button htmlType="submit" type="primary" icon={<SearchOutlined />} />
-        </Form.Item>
-      </Form>
+        {isTop !== "top" && (
+          <Button
+            type="primary"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => {
+              navigate(-1); // 返回上一页
+            }}
+          >
+            返回
+          </Button>
+        )}
+      </div>
+      {isTop === "top" && (
+        <Form
+          layout="inline"
+          onFinish={(v) => {
+            console.log(v);
+            navigate(`/admin/UsageList/${v.name}/top`); // 导航到带有 u_p_id 参数设置为 r.p_id 的 UsageList 页面
+          }}
+        >
+          <Form.Item label="查询产品" name="name">
+            <Input placeholder="请输入产品编号" allowClear />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              icon={<SearchOutlined />}
+            />
+          </Form.Item>
+        </Form>
+      )}
       <Card title="使用情况信息列表">
         <Card.Grid style={{ width: "25%", textAlign: "center" }}>
-          <>产品编号：</> {u_p_id!=="0"&&(
-          <>{u_p_id}
-          <Image width={"auto"} src={serverUrl + productImg} style={{paddingBottom: "5px"}} /></>)}
+          <>产品编号：</>{" "}
+          {u_p_id !== "0" && productImg !== null && (
+            <>
+              {u_p_id}
+              <Image
+                width={"auto"}
+                src={"https://roll0814.cn:8000/" + productImg}
+                style={{ paddingBottom: "5px" }}
+              />
+            </>
+          )}
           {productState === "在架上" && (
             <div
               style={{
@@ -69,7 +118,6 @@ function UsageList() {
               />
               在架上
             </div>
-            
           )}
           {productState === "使用中" && (
             <div

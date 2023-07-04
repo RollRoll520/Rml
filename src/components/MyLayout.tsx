@@ -85,7 +85,7 @@ const MyLayout = ({ children }: any) => {
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="sub3" icon={<SearchOutlined />}>
-            <Link to="UsageList/0">信息查询</Link>
+            <Link to="UsageList/0/top">信息查询</Link>
           </Menu.Item>
           <Menu.Item key="sub4" icon={<SettingOutlined />}>
             <Link to="Settings">其他设置</Link>
